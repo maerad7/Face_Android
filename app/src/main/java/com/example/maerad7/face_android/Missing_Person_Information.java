@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.concurrent.ExecutionException;
@@ -16,18 +17,30 @@ public class Missing_Person_Information extends AppCompatActivity {
     final int MP_List=20;
     final int MP_register=21;
     final int image_compare=22;
-    EditText editText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_missing__person__information);
-        Missing_Person_Information_APITask t = new Missing_Person_Information_APITask();
+        TextView Disappearance_AddressView=(TextView) findViewById(R.id.Disappearance_Address);
+        TextView Name_View=(TextView)findViewById(R.id.Name);
+        TextView Missing_age_View=(TextView)findViewById(R.id.Missing_age);
+        TextView Missing_height_View=(TextView)findViewById(R.id.Missing_height);
+        TextView Missing_wigeht_View=(TextView)findViewById(R.id.Missing_Weight);
+        TextView Disappearance_dateView=(TextView)findViewById(R.id.Disappearance_Date);
+        Bundle bundle=getIntent().getExtras();
+        String id = bundle.getString("ID");
+        int member_id = Integer.parseInt(id);
+        Missing_Person_Information_detail_APItask t = new Missing_Person_Information_detail_APItask();
         try{
-            Missing_Person_Information_Json missing_person_information_json= (Missing_Person_Information_Json) t.execute().get();
-            String diapear_address=String.valueOf(missing_person_information_json.getDisappearanceAddress());
-            //editText=(EditText)findViewById(R.id.Disappearance_Address1);
-            Toast.makeText(getApplicationContext(),diapear_address,Toast.LENGTH_LONG);
+            Missing_Person_Information_detail_Json missing_person_information_detail_json= (Missing_Person_Information_detail_Json) t.execute(member_id).get();
+
+            Disappearance_AddressView.setText(missing_person_information_detail_json.getDisappearanceAddress());
+            Name_View.setText(missing_person_information_detail_json.getMPName());
+            Missing_age_View.setText(missing_person_information_detail_json.getMissingAge());
+            Missing_height_View.setText(missing_person_information_detail_json.getMissingHeight());
+            Missing_wigeht_View.setText(missing_person_information_detail_json.getMissingWeight());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -49,10 +62,11 @@ public class Missing_Person_Information extends AppCompatActivity {
 
 
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         boolean result=super.onCreateOptionsMenu(menu);
-        menu.add(0,MP_List,1,"실종자목적");
+        menu.add(0,MP_List,1,"실종자목록");
         menu.add(0,MP_register,2,"실종자등록");
         menu.add(0,image_compare,3,"이미지비교");
         return result;
@@ -82,5 +96,6 @@ public class Missing_Person_Information extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),menuString,Toast.LENGTH_SHORT).show();
         return returnResult;
     }
+
 }
 

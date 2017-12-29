@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
 public class Missing_Person_List extends AppCompatActivity {
     final int MP_List=20;
@@ -24,10 +25,10 @@ public class Missing_Person_List extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_missing__person__list);
-        final ArrayList<HashMap<String,Object>> arrayList=new ArrayList<HashMap<String,Object>>();
+        ArrayList<HashMap<String,Object>> arrayList=new ArrayList<HashMap<String,Object>>();
         HashMap<String,Object> hashMap=null;
         hashMap = new HashMap<String,Object>();
-        hashMap.put("MP_Name","yerin");
+        /*hashMap.put("MP_Name","yerin");
         hashMap.put("Disappearance_Address","Seoul");
         hashMap.put("Image",R.drawable.yerin);
         arrayList.add(hashMap);
@@ -36,20 +37,27 @@ public class Missing_Person_List extends AppCompatActivity {
         hashMap2.put("MP_Name","yerin");
         hashMap2.put("Disappearance_Address","Seoul");
         hashMap2.put("Image",R.drawable.yerin);
-        arrayList.add(hashMap2);
+        arrayList.add(hashMap2);*/
+        Missing_Person_Information_APITask t = new Missing_Person_Information_APITask();
+        try{
+            arrayList= (ArrayList) t.execute().get();
+            recyclerView=(RecyclerView)findViewById(R.id.recycler_view);
+            layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
+            adapter=new RecyclerAdapter(arrayList);
+            recyclerView.setAdapter(adapter);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
 
-
-        recyclerView=(RecyclerView)findViewById(R.id.recycler_view);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter=new RecyclerAdapter(arrayList);
-        recyclerView.setAdapter(adapter);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         boolean result=super.onCreateOptionsMenu(menu);
-        menu.add(0,MP_List,1,"실종자목적");
+        menu.add(0,MP_List,1,"실종자목록");
         menu.add(0,MP_register,2,"실종자등록");
         menu.add(0,image_compare,3,"이미지비교");
         return result;

@@ -14,6 +14,13 @@ public class Missing_Person_Information_Json {
     String missingage;
     String missingHeight;
     String missingAge;
+    String missing_Infromation;
+    public String getMissing_Infromation(){
+        return missing_Infromation;
+    }
+    public void setMissing_Infromation(String missing_infromation){
+        this.missing_Infromation = missing_infromation;
+    }
 
     public String getDisappearanceAddress() {
         return disappearanceAddress;
@@ -47,11 +54,11 @@ public class Missing_Person_Information_Json {
         this.memberID = memberID;
     }
 
-    public Integer getMissingPersonID() {
+    public int getMissingPersonID() {
         return missingPersonID;
     }
 
-    public void setMissingPersonID(Integer missingPersonID) {
+    public void setMissingPersonID(int missingPersonID) {
         this.missingPersonID = missingPersonID;
     }
 

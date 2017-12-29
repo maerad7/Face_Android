@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight=".7"
+        android:gravity="center_vertical"
+        android:text="Please select any one"
+        android:textColor="@android:color/background_light" />
+
+    <TextView
+        android:id="@+id/txtOne"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight=".1"
+        android:gravity="center"
+        android:text="CAM"
+        android:textColor="@android:color/holo_green_light" />
+
+    <TextView
+        android:id="@+id/txtTwo"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight=".1"
+        android:gravity="center"
+        android:text="Gallery"
+        android:textColor="@color/colorAccent" />
+</LinearLayout>

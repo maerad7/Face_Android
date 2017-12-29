@@ -6,6 +6,7 @@ package com.example.maerad7.face_android;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,11 +35,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         HashMap<String,Object> hashMap= arrayList.get(position);
         holder.MP_Name.setText((String)hashMap.get("MP_Name"));
         holder.Disappearance_Address.setText((String)hashMap.get("Disappearance_Address"));
-        holder.Image.setImageResource((Integer)hashMap.get("Image"));
+        holder.hiddenID.setText((String)hashMap.get("MissingPerson_ID"));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent;
+                intent= new Intent(v.getContext(),Missing_Person_Information.class);
+                Bundle bundle=new Bundle();
+                bundle.putString("ID", holder.hiddenID.getText().toString());
+
+                intent.putExtras(bundle);
+                v.getContext().startActivity(intent);
+            }
+        });
+        //holder.Image.setImageResource((Integer)hashMap.get("Image"));
     }
 
     @Override
@@ -58,6 +72,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         public ImageView Image;
         public TextView MP_Name;
         public TextView Disappearance_Address;
+        public TextView hiddenID;
+
         private final Context context;
 
 
@@ -67,18 +83,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             Image = (ImageView)itemView.findViewById(R.id.Image);
             MP_Name = (TextView)itemView.findViewById(R.id.MP_Name);
             Disappearance_Address = (TextView)itemView.findViewById(R.id.Disappearance_Address);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-              ;
-                    final Intent intent;
+            hiddenID = (TextView)itemView.findViewById(R.id.hiddenID);
 
-                    intent= new Intent(context,Missing_Person_Information.class);
-                    context.startActivity(intent);
-
-
-                }
-            });
         }
     }
 }

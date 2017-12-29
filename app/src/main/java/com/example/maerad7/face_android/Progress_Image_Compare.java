@@ -30,7 +30,7 @@ public class Progress_Image_Compare extends AppCompatActivity {
     }; @Override
     public boolean onCreateOptionsMenu(Menu menu){
         boolean result=super.onCreateOptionsMenu(menu);
-        menu.add(0,MP_List,1,"실종자목적");
+        menu.add(0,MP_List,1,"실종자목록");
         menu.add(0,MP_register,2,"실종자등록");
         menu.add(0,image_compare,3,"이미지비교");
         return result;

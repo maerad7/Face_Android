@@ -3,11 +3,14 @@ package com.example.maerad7.face_android;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,10 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -43,6 +49,7 @@ public class Missing_Person_register extends AppCompatActivity {
     String URL;
     String ID;
     InputStream inputStream = null;
+    Uri selectedImage=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +101,18 @@ public class Missing_Person_register extends AppCompatActivity {
             switch(id){
                 case R.id.MP_Button:
                     String URL1="http://192.168.0.191:5000/img_Upload";
+                    String image= null;
+                    String path = null;
+                    path = getRealPathFromURI_BelowAPI11(v.getContext(),selectedImage);
+                    try {
+                        image = readFileAsString(path);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     FileUplaodTask fileUplaodTask = new FileUplaodTask();
-                    fileUplaodTask.execute(getStringFromInputStream(inputStream),URL1);
+                    fileUplaodTask.execute(image,URL1);
+
                     break;
             }
 
@@ -109,7 +126,7 @@ public class Missing_Person_register extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         ImageButton imageView = (ImageButton) findViewById(R.id.imageButton);
         if(data != null){
-            Uri selectedImage = data.getData();
+            selectedImage = data.getData();
             try {
                 inputStream = this.getContentResolver().openInputStream(selectedImage);
             } catch (FileNotFoundException e) {
@@ -176,4 +193,64 @@ public class Missing_Person_register extends AppCompatActivity {
         }
         return sb.toString();
     }
+
+    public String getStringFromFile (String filePath) throws Exception {
+        File fl = new File(filePath);
+        FileInputStream fin = new FileInputStream(fl);
+        String ret = getStringFromInputStream(fin);
+        fin.close();
+        return ret;
+    }
+
+    public static String getRealPathFromURI_BelowAPI11(Context context, Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+        String result = null;
+
+        try {
+            Cursor cursor = context.getContentResolver().query(contentUri, null, null, null, null);
+            if (cursor == null) { // Source is Dropbox or other similar local file path
+                result = contentUri.getPath();
+            } else {
+                cursor.moveToFirst();
+//                int column_index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+
+                result = cursor.getString(6);
+            }
+
+        } catch (Exception e) {
+
+            result = null;
+        }
+        return result;
+    }//파일경로로받아 서 파 일 문자열 로바꾸 기 
+     public static String readFileAsString(String filePath) {
+        String result = "";
+        File file = new File(filePath);
+        if ( file.exists() ) {
+            //byte[] buffer = new byte[(int) new File(filePath).length()];
+            FileInputStream fis = null;
+            try {
+                //f = new BufferedInputStream(new FileInputStream(filePath));
+                //f.read(buffer);
+
+                fis = new FileInputStream(file);
+                char current;
+                while (fis.available() > 0) {
+                    current = (char) fis.read();
+                    result = result + String.valueOf(current);
+                }
+            } catch (Exception e) {
+                Log.d("TourGuide", e.toString());
+            } finally {
+                if (fis != null)
+                    try {
+                        fis.close();
+                    } catch (IOException ignored) {
+                    }
+            }
+            //result = new String(buffer);
+        }
+        return result;
+    }
+
 }

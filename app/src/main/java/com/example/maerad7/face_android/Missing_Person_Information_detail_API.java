@@ -18,25 +18,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by maerad7 on 17. 12. 19.
+ * Created by maerad7 on 17. 12. 22.
  */
 
-public class Missing_Person_Information_API {
+public class Missing_Person_Information_detail_API {
+    final static String Missing_Person_Information_detailURL = "http://192.168.0.191:5000/sendMIssingInformation";
 
 
-    final static String sendMissing_Person_InformationURL = "http://192.168.0.191:5000/sendMissing_Person_Information";
 
-    // json list
-    public ArrayList getArrayListMissing_Person_Information_Json() {
-        Missing_Person_Information_Json missing_Person_Information_Json = new Missing_Person_Information_Json();
+    //id 파라미터 로 JSON 파싱하
+    public Missing_Person_Information_detail_Json getMissing_Person_Information_detail_Json(int memberID) {
+        Missing_Person_Information_detail_Json missing_person_information_detail_json = new Missing_Person_Information_detail_Json();
+        String urlString = Missing_Person_Information_detailURL +'/'+ memberID;
 
         try {
-            URL url = new URL(sendMissing_Person_InformationURL);
+            URL url = new URL(urlString);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             JSONObject json = new JSONObject(getStringFromInputStream(in));
 
-            arrayList = parseJSON(json);
+            missing_person_information_detail_json = parseJSON(json);
 
 
         } catch (MalformedURLException e) {
@@ -46,47 +47,13 @@ public class Missing_Person_Information_API {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return arrayList;
-    }
+        return missing_person_information_detail_json;
 
-    ArrayList<HashMap<String, Object>> arrayList = new ArrayList<HashMap<String, Object>>();
+
+    }
 
     //jSON PARSE
-    private ArrayList parseJSON(JSONObject json) throws JSONException {
 
-        JSONArray values = json.getJSONArray("Missing_Person_Information_Json");
-        for (int i = 0; i < values.length(); i++) {
-            Missing_Person_Information_Json missing_Person_Information_Json = new Missing_Person_Information_Json();
-            HashMap<String, Object> hashMap = null;
-            hashMap = new HashMap<String, Object>();
-            JSONObject M = values.getJSONObject(i);
-            missing_Person_Information_Json.disappearanceAddress = M.getString("Disappearance_Address");
-            hashMap.put("Disappearance_Address", missing_Person_Information_Json.getDisappearanceAddress());
-            missing_Person_Information_Json.disappearanceDate = M.getString("Disappearance_Date");
-            hashMap.put("Disappearance_Date", missing_Person_Information_Json.getDisappearanceDate());
-
-            missing_Person_Information_Json.mPName = M.getString("MP_Name");
-            hashMap.put("MP_Name", missing_Person_Information_Json.getMPName());
-
-            missing_Person_Information_Json.missingPersonID = ( M.getInt("MissingPerson_ID"));
-
-            hashMap.put("MissingPerson_ID", String.valueOf(missing_Person_Information_Json.getMissingPersonID()));
-
-            missing_Person_Information_Json.missingWeight = M.getString("Missing_Weight");
-            hashMap.put("Missing_Weight", missing_Person_Information_Json.getMissingWeight());
-
-            missing_Person_Information_Json.missingAge = M.getString("Missing_age");
-            hashMap.put("Missing_age", missing_Person_Information_Json.getMissingAge());
-
-            missing_Person_Information_Json.missingHeight = M.getString("Missing_height");
-            hashMap.put("Missing_height", missing_Person_Information_Json.getMissingHeight());
-
-            missing_Person_Information_Json.memberID=M.getString("Member_ID");
-            hashMap.put("Member_ID",missing_Person_Information_Json.getMemberID());
-            arrayList.add(hashMap);
-        }
-        return arrayList;
-    }
 
 
     public void getMissing_Person_Information_Json(View view) {
@@ -117,6 +84,22 @@ public class Missing_Person_Information_API {
             }
         }
         return sb.toString();
+    }
+    private Missing_Person_Information_detail_Json parseJSON(JSONObject json) throws JSONException {
+
+        Missing_Person_Information_detail_Json missing_person_information_detail_json = new Missing_Person_Information_detail_Json();
+        JSONArray values = json.getJSONArray("sendMissingInformation");
+
+        JSONObject M = values.getJSONObject(0);
+        missing_person_information_detail_json.disappearanceAddress = M.getString("Disappearance_Address");
+        missing_person_information_detail_json.mPName=M.getString("MP_Name");
+        missing_person_information_detail_json.missingAge=M.getString("Missing_age");
+        missing_person_information_detail_json.disappearanceDate=M.getString("Disappearance_Date");
+        missing_person_information_detail_json.missingHeight=M.getString("Missing_height");
+        missing_person_information_detail_json.missingWeight=M.getString("Missing_Weight");
+
+
+        return missing_person_information_detail_json;
     }
 /*
     //id 파라미터 로 JSON 파싱하
@@ -161,5 +144,5 @@ public class Missing_Person_Information_API {
 
         return missing_Person_Information_Json;
     }*/
-}
 
+}
