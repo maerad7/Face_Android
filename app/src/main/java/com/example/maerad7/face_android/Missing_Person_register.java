@@ -222,7 +222,7 @@ public class Missing_Person_register extends AppCompatActivity {
             result = null;
         }
         return result;
-    }//파일경로로받아 서 파 일 문자열 로바꾸 기 
+    }//파일경로로받아 서 파 일 문자열 로바꾸 기
      public static String readFileAsString(String filePath) {
         String result = "";
         File file = new File(filePath);
